@@ -280,22 +280,11 @@ Task("UploadTestCoverage")
     });
 });
 
-Task("SignPackages")
-    .WithCriteria(() => !local)
-    .WithCriteria(() => !isPullRequest)
-    .Does(() =>
-{
-    StartPowershellFile("./SignPackages.ps1", args =>
-    {
-    });
-});
-
 Task("Package")
     .IsDependentOn("BuildReactiveUI")
     .IsDependentOn("RunUnitTests")
     .IsDependentOn("UploadTestCoverage")
     .IsDependentOn("PinNuGetDependencies")
-    .IsDependentOn("SignPackages")
     .Does (() =>
 {
 });
@@ -318,7 +307,6 @@ Task("PinNuGetDependencies")
 Task("PublishPackages")
     .IsDependentOn("RunUnitTests")
     .IsDependentOn("Package")
-    .IsDependentOn("SignPackages")
     .WithCriteria(() => !local)
     .WithCriteria(() => !isPullRequest)
     .WithCriteria(() => isRepository)
